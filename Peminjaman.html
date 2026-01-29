@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Monitoring Peminjaman | UKM CINEMA</title>
+    <link rel="stylesheet" href="css/style_dashboard.css">
+</head>
+<body>
+
+<div class="topbar">
+    <img src="img/Cinema.png" alt="CINEMA" class="logo">
+</div>
+
+<div class="container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <ul>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="data-barang.html">Data Barang</a></li>
+            <li class="active"><a href="peminjaman.html" aria-current="page">Peminjaman</a></li>
+            <li><a href="riwayat.html">Riwayat</a></li>
+            <li><a href="laporan.html">Laporan</a></li>
+        </ul>
+    </aside>
+
+    <!-- Content -->
+    <main class="content peminjaman">
+        <div class="main-inner">
+        <h1>Data Peminjaman Aktif</h1>
+        <div style="display:flex;align-items:center;gap:12px">
+          <p class="subtitle" style="margin:0">Monitoring peminjaman barang secara realtime</p>
+          <button class="btn btn-outline btn-selftest" id="btn-selftest-global">Jalankan Tes</button>
+        </div>
+
+        <!-- QR Scanner Section -->
+        <section class="qr-scanner-section" style="margin:20px 0;padding:20px;background:white;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <h2 style="margin:0;font-size:18px">🔲 Scan QR Code Barang</h2>
+            <button type="button" class="btn btn-primary" id="btn-toggle-scanner">📷 Buka Scanner</button>
+          </div>
+          
+          <div id="qr-scanner-container" style="display:none">
+            <div style="display:flex;gap:20px;flex-wrap:wrap">
+              <!-- Canvas Preview -->
+              <div style="flex:1;min-width:280px">
+                <div style="position:relative;background:#f5f7fa;border-radius:8px;overflow:hidden;border:2px solid #1a237e">
+                  <video id="qr-video" autoplay playsinline style="width:100%;display:block;max-width:400px"></video>
+                  <canvas id="qr-canvas" style="position:absolute;top:0;left:0;width:100%;height:100%;display:none"></canvas>
+                  <div id="qr-overlay" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200px;height:200px;border:3px solid #4ade80;border-radius:8px;pointer-events:none;box-shadow:0 0 0 9999px rgba(0,0,0,0.5)"></div>
+                </div>
+                <div style="margin-top:8px;display:flex;gap:8px">
+                  <button type="button" class="btn btn-outline" id="btn-close-scanner">❌ Tutup</button>
+                  <button type="button" class="btn btn-outline" id="btn-switch-camera" style="display:none">🔄 Ganti Kamera</button>
+                </div>
+              </div>
+              
+              <!-- Status & Info -->
+              <div style="flex:1;min-width:280px">
+                <div id="scanner-status" style="padding:16px;background:#f5f7fa;border-radius:8px;border-left:4px solid #1a237e">
+                  <p style="margin:0;font-weight:600;margin-bottom:8px">📍 Status Scanner</p>
+                  <p id="status-text" style="margin:0;font-size:14px;color:#666">Menunggu QR code...</p>
+                </div>
+                
+                <div id="scan-result" style="display:none;margin-top:12px;padding:16px;background:#dcfce7;border-radius:8px;border-left:4px solid #4ade80">
+                  <p style="margin:0;font-weight:600;margin-bottom:8px;color:#166534">✅ QR Terdeteksi!</p>
+                  <p style="margin:0;font-size:14px;color:#166534;word-break:break-all" id="scanned-code"></p>
+                </div>
+                
+                <div style="margin-top:16px;padding:12px;background:#fff;border-radius:8px;border:1px solid #e5e7eb">
+                  <p style="margin:0;font-size:13px;color:#666;line-height:1.6">
+                    <strong>💡 Tips:</strong><br>
+                    • Posisikan QR code di tengah kotak hijau<br>
+                    • Pastikan pencahayaan cukup<br>
+                    • Jaga jarak 10-30cm dari kamera<br>
+                    • QR akan otomatis terdeteksi
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Form Peminjaman (akan terisi otomatis bila ada ?code=KODE) -->
+        <section class="loan-section" id="loan-section" style="display:none;margin-bottom:18px">
+          <h2>Form Peminjaman</h2>
+          <form id="form-peminjaman" class="modal-form">
+            <div class="loan-item" style="display:flex;gap:12px;align-items:center;margin-bottom:8px">
+              <img id="loan-item-img" src="" alt="Barang" style="width:80px;height:80px;object-fit:cover;border-radius:6px">
+              <div>
+                <div id="loan-item-name" style="font-weight:700"></div>
+                <div id="loan-item-code" style="font-size:12px;color:var(--muted)"></div>
+              </div>
+            </div>
+
+            <input type="hidden" name="item_code" id="loan-item-code-input">
+
+            <label>Nama Peminjam
+              <input type="text" name="nama_peminjam" required>
+            </label>
+            <label>Devisi
+              <input type="text" name="devisi" required>
+            </label>
+            <label>Tanggal Peminjaman
+              <input type="datetime-local" name="tanggal_pinjam" id="tanggal_pinjam" required>
+            </label>
+            <label>Tanggal Pengembalian
+              <input type="date" name="tanggal_kembali" required>
+            </label>
+            <label>Dokumentasi (selfie bersama barang)
+              <div class="camera-wrap">
+                <div class="camera-preview">
+                  <video id="selfie_video" autoplay playsinline style="display:none;border-radius:8px;max-width:220px"></video>
+                  <div class="preview" id="selfie_preview" aria-hidden="true"></div>
+                </div>
+                <div class="camera-controls">
+                  <button type="button" class="btn btn-outline" id="btn-start-camera">Ambil Foto</button>
+                  <button type="button" class="btn btn-outline" id="btn-capture" style="display:none;margin-top:6px">Tangkap</button>
+                  <button type="button" class="btn btn-outline" id="btn-retake" style="display:none;margin-top:6px">Ulangi</button>
+                  <button type="button" class="btn btn-outline" id="btn-stop-camera" style="display:none;margin-top:6px">Tutup Kamera</button>
+                  <div style="margin-top:8px"><small class="muted">Atau unggah foto</small></div>
+                  <input type="file" name="foto_selfie" accept="image/*" capture="user" id="foto_selfie">
+                </div>
+              </div>
+              <canvas id="selfie_canvas" style="display:none"></canvas>
+            </label>
+            <label>Keterangan
+              <input type="text" name="keterangan">
+            </label>
+            <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+              <button type="submit" class="btn btn-primary">Kirim Peminjaman</button>
+              <button type="button" class="btn btn-outline btn-selftest" id="btn-selftest-form">Jalankan Tes</button>
+            </div>
+          </form>
+        </section>
+
+        <div class="table-wrapper">
+            <p id="peminjaman-desc" class="sr-only">Daftar peminjaman aktif: nomor, barang, peminjam, divisi, tanggal pinjam, deadline, status, foto, dan keterangan.</p>
+            <div class="table-toolbar">
+                <input class="table-search" type="search" placeholder="Cari peminjam, barang, atau keterangan..." aria-label="Cari">
+                <select class="page-size" aria-label="Baris per halaman">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="20">20</option>
+                </select>
+                <button class="btn btn-outline btn-export">Export CSV</button>
+            </div>
+            <table class="table-peminjaman data-table" aria-describedby="peminjaman-desc">
+                <thead>
+                    <tr>
+                        <th class="col-no">No</th>
+                        <th class="col-barang">Barang</th>
+                        <th class="col-peminjam">Peminjam</th>
+                        <th class="col-divisi">Divisi</th>
+                        <th class="col-tgl">Tgl Pinjam</th>
+                        <th class="col-deadline">Deadline</th>
+                        <th class="col-status">Status</th>
+                        <th class="col-foto">Foto</th>
+                        <th class="col-ket">Keterangan</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Tripod</td>
+                        <td>Zesar Sandi</td>
+                        <td>Kamera</td>
+                        <td>05-01-2026</td>
+                        <td>07-01-2026</td>
+                        <td>
+                            <span class="status aktif">Aktif</span>
+                        </td>
+                        <td>
+                            <img src="assets/img/dokumentasi1.jpg" alt="Dokumentasi">
+                        </td>
+                        <td>Digunakan untuk shooting short movie</td>
+                    </tr>
+
+                    <tr>
+                        <td>2</td>
+                        <td>Flash Godox</td>
+                        <td>Bagas</td>
+                        <td>Produksi</td>
+                        <td>04-01-2026</td>
+                        <td>05-01-2026</td>
+                        <td>
+                            <span class="status terlambat">Terlambat</span>
+                        </td>
+                        <td>
+                            <img src="assets/img/dokumentasi2.jpg" alt="Dokumentasi">
+                        </td>
+                        <td>Dokumentasi acara internal UKM</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+        </div>
+
+    </main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/qr-scanner.js"></script>
+<script src="assets/js/google-integration.js"></script>
+</body>
+</html>

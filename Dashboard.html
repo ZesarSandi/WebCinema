@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Inventaris UKM CINEMA</title>
+    <link rel="stylesheet" href="css/style_dashboard.css">
+</head>
+<body>
+
+<!-- Top Navbar -->
+<div class="topbar">
+    <img src="img/Cinema.png" alt="CINEMA" class="logo">
+</div>
+
+<div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <ul>
+            <li class="active"><a href="Dashboard.html" aria-current="page">Dashboard</a></li>
+            <li><a href="data-barang.html">Data Barang <span class="sidebar-badge" id="sidebar-items-count">0</span></a></li>
+            <li><a href="peminjaman.html">Peminjaman</a></li>
+            <li><a href="riwayat.html">Riwayat</a></li>
+            <li><a href="laporan.html">Laporan</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+        <div class="main-inner">
+        <h1>Dashboard</h1>
+
+        <!-- Google Integration Tools -->
+        <div style="margin-bottom:20px;padding:16px;background:white;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                <h2 style="margin:0;font-size:16px;color:#1a237e">🌐 Google Integration</h2>
+                <button onclick="testInternetConnection()" class="btn btn-outline" style="font-size:12px;padding:6px 12px">🔍 Test Koneksi</button>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button onclick="googleDriveBackup()" class="btn btn-primary" style="font-size:13px;padding:8px 14px">
+                    💾 Backup to Drive
+                </button>
+                <button onclick="exportToGoogleSheets()" class="btn btn-outline" style="font-size:13px;padding:8px 14px">
+                    📊 Export to Sheets
+                </button>
+                <button onclick="openGoogleMaps()" class="btn btn-outline" style="font-size:13px;padding:8px 14px">
+                    📍 Open Maps
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard stats -->
+        <div class="cards dashboard-stats" style="margin-bottom:12px">
+            <div class="card stat-item">
+                <h3>Total Barang</h3>
+                <p class="number" id="dashboard-total-items">0</p>
+            </div>
+            <div class="card stat-item">
+                <h3>Total Peminjaman</h3>
+                <p class="number" id="dashboard-total-loans">0</p>
+            </div>
+            <div class="card stat-item">
+                <h3>Aktif / Selesai</h3>
+                <p class="number" id="dashboard-active-completed">0 / 0</p>
+            </div>
+        </div>
+
+        <!-- Riwayat Table -->
+        <div class="table-wrap">
+            <h2>Riwayat</h2>
+            <p id="riwayat-desc" class="sr-only">Riwayat peminjaman terakhir: nama barang, peminjam, dan estimasi peminjaman.</p>
+            <table class="data-table dashboard-riwayat" aria-describedby="riwayat-desc">
+                <thead>
+                    <tr>
+                        <th class="col-barang">Barang</th>
+                        <th class="col-nama">Nama</th>
+                        <th class="col-estimasi">Estimasi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- rows injected by JS -->
+                </tbody>
+            </table>
+            <div style="margin-top:8px;text-align:right"><a href="riwayat.html" class="btn btn-outline">Lihat Selengkapnya</a></div>
+        </div>
+        </div>
+    </main>
+</div>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/google-integration.js"></script>
+</body>
+</html>

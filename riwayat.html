@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Riwayat Peminjaman | UKM CINEMA</title>
+  <link rel="stylesheet" href="css/style_dashboard.css">
+</head>
+<body>
+
+<div class="topbar">
+  <img src="img/Cinema.png" alt="CINEMA" class="logo">
+</div>
+
+<div class="container">
+  <aside class="sidebar">
+    <ul>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="data-barang.html">Data Barang</a></li>
+      <li><a href="peminjaman.html">Peminjaman</a></li>
+      <li class="active"><a href="riwayat.html" aria-current="page">Riwayat</a></li>
+      <li><a href="laporan.html">Laporan</a></li>
+    </ul>
+  </aside>
+
+  <main class="content riwayat">
+    <div class="main-inner">
+      <h1>Riwayat Peminjaman</h1>
+      <p class="subtitle">Catatan peminjaman (selesai / seluruh catatan)</p>
+
+      <div class="table-controls">
+        <div class="table-toolbar">
+          <input class="table-search" type="search" placeholder="Cari peminjam, barang, atau keterangan..." aria-label="Cari">
+          <select class="page-size" aria-label="Baris per halaman">
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="20">20</option>
+          </select>
+          <button class="btn btn-outline btn-export">Export CSV</button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <caption class="sr-only">Riwayat peminjaman</caption>
+        <table class="data-table table-riwayat" aria-describedby="riwayat-desc">
+          <thead>
+            <tr>
+              <th class="col-no">No</th>
+              <th class="col-barang">Barang</th>
+              <th class="col-kode">Kode</th>
+              <th class="col-peminjam">Peminjam</th>
+              <th class="col-divisi">Divisi</th>
+              <th class="col-tgl">Tgl Pinjam</th>
+              <th class="col-deadline">Deadline</th>
+              <th class="col-status">Status</th>
+              <th class="col-foto">Foto</th>
+              <th class="col-ket">Keterangan</th>
+              <th class="col-aksi">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- rows rendered by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/google-integration.js"></script>
+</body>
+</html>

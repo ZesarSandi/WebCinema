@@ -1,0 +1,22 @@
+{
+  "name": "web-cinema",
+  "version": "1.0.0",
+  "description": "Sistem manajemen inventaris dan peminjaman alat untuk UKM Cinema dengan penyimpanan data di browser (localStorage).",
+  "main": "index.js",
+  "scripts": {
+    "build:qr": "node build-qr.js && npx browserify qr-wrapper.js -o assets/js/qrcode-bundle.js",
+    "build": "npm run build:qr",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["qr-code", "inventory", "cinema"],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "jsqr": "^1.4.0",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "browserify": "^17.0.1"
+  }
+}

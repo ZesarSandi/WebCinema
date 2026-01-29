@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>QR Code Sync Test | UKM CINEMA</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 { color: #1a237e; margin-top: 0; }
+        h2 { color: #1a237e; font-size: 18px; margin-top: 24px; }
+        .section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 4px solid #1a237e;
+            border-radius: 4px;
+        }
+        button {
+            background: #1a237e;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px 5px 5px 0;
+        }
+        button:hover { background: #0d1b4a; }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .output {
+            background: #1a237e;
+            color: #4ade80;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .success { color: #4ade80; }
+        .error { color: #ff6b6b; }
+        .info { color: #87ceeb; }
+        .warn { color: #ffd700; }
+        .qr-preview {
+            text-align: center;
+            margin: 15px 0;
+        }
+        .qr-preview img {
+            max-width: 250px;
+            border: 2px solid #1a237e;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🧪 QR Code Synchronization Test</h1>
+    <p>Test page untuk memverifikasi QR code generation & synchronization.</p>
+
+    <div class="section">
+        <h2>Test 1: Generate QR Code</h2>
+        <label>Kode Barang:</label>
+        <input type="text" id="testCode" value="ITEM-1234567890" placeholder="Masukkan kode barang">
+        <button onclick="testGenerateQR()">🔄 Generate QR</button>
+        <button onclick="testClearQR()">🗑️ Clear</button>
+    </div>
+
+    <div class="section">
+        <h2>QR Preview:</h2>
+        <div class="qr-preview" id="qrPreview">
+            <p style="color: #999;">Belum ada QR</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Test 2: Library Check</h2>
+        <button onclick="checkLibrary()">✅ Check QRCode.js Library</button>
+        <button onclick="testBrowserify()">📦 Check Browserified Bundle</button>
+    </div>
+
+    <div class="section">
+        <h2>Console Output:</h2>
+        <div class="output" id="output">Ready for testing...\n</div>
+        <button onclick="clearOutput()">Clear Log</button>
+    </div>
+
+</div>
+
+<!-- QRCode library from npm (local bundle) -->
+<script src="assets/js/qrcode-bundle.js"></script>
+
+<script>
+    const outputEl = document.getElementById('output');
+    const qrPreviewEl = document.getElementById('qrPreview');
+    let currentQRUrl = null;
+
+    function log(msg, type = 'info') {
+        const timestamp = new Date().toLocaleTimeString();
+        let color = '';
+        switch(type) {
+            case 'success': color = 'class="success"'; break;
+            case 'error': color = 'class="error"'; break;
+            case 'warn': color = 'class="warn"'; break;
+            case 'info': color = 'class="info"'; break;
+        }
+        const line = `[${timestamp}] <span ${color}>${msg}</span>`;
+        outputEl.innerHTML += line + '\n';
+        outputEl.scrollTop = outputEl.scrollHeight;
+        console.log(msg);
+    }
+
+    function clearOutput() {
+        outputEl.innerHTML = '';
+    }
+
+    function testClearQR() {
+        qrPreviewEl.innerHTML = '<p style="color: #999;">Cleared</p>';
+        currentQRUrl = null;
+        log('QR preview cleared', 'info');
+    }
+
+    function checkLibrary() {
+        log('Checking QRCode.js library...', 'info');
+        if(typeof QRCode !== 'undefined') {
+            log('✅ QRCode is available globally', 'success');
+            log('  typeof QRCode: ' + typeof QRCode, 'info');
+            log('  QRCode.toDataURL: ' + (typeof QRCode.toDataURL), 'info');
+        } else {
+            log('❌ QRCode is NOT available', 'error');
+            log('  Check if qrcode-bundle.js loaded correctly', 'warn');
+        }
+    }
+
+    function testBrowserify() {
+        log('Checking Browserify bundle...', 'info');
+        fetch('assets/js/qrcode-bundle.js', {method: 'HEAD'})
+            .then(r => {
+                if(r.ok) {
+                    log(`✅ Bundle exists (${r.headers.get('content-length')} bytes)`, 'success');
+                } else {
+                    log('❌ Bundle not found (404)', 'error');
+                }
+            })
+            .catch(e => log('❌ Error checking bundle: ' + e.message, 'error'));
+    }
+
+    function testGenerateQR() {
+        const code = document.getElementById('testCode').value.trim();
+        if(!code) {
+            log('⚠️ Masukkan kode barang terlebih dahulu', 'warn');
+            return;
+        }
+
+        log(`🔄 Generating QR for code: ${code}`, 'info');
+
+        // Check library first
+        if(typeof QRCode === 'undefined') {
+            log('❌ QRCode library not loaded!', 'error');
+            log('Falling back to Google Charts API...', 'warn');
+            const fallbackUrl = 'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' + encodeURIComponent(code);
+            displayQR(fallbackUrl, 'fallback');
+            return;
+        }
+
+        // Build full URL
+        const base = (location.origin && location.origin!=='null') ? 
+            (location.origin + location.pathname.replace(/\/[^\/]*$/, '')) : 
+            (location.href.replace(/[^\/]*$/, ''));
+        const url = base + 'peminjaman.html?code=' + encodeURIComponent(code);
+        
+        log(`URL: ${url}`, 'info');
+
+        // Generate with qrcode.js
+        QRCode.toDataURL(url, {
+            width: 300,
+            margin: 2,
+            color: { dark: '#1a237e', light: '#ffffff' }
+        }, function(err, dataUrl) {
+            if(err) {
+                log('❌ QRCode.js error: ' + err.message, 'error');
+                log('Falling back to Google Charts API...', 'warn');
+                const fallbackUrl = 'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' + encodeURIComponent(url);
+                displayQR(fallbackUrl, 'fallback');
+            } else {
+                log('✅ QR generated successfully with qrcode.js', 'success');
+                displayQR(dataUrl, 'success');
+            }
+        });
+    }
+
+    function displayQR(url, type) {
+        currentQRUrl = url;
+        const img = new Image();
+        img.onload = function() {
+            qrPreviewEl.innerHTML = `<img src="${url}" alt="QR Code">`;
+            log(`✅ QR image loaded (${type})`, 'success');
+        };
+        img.onerror = function() {
+            qrPreviewEl.innerHTML = `<p style="color: #ff6b6b;">Failed to load QR image</p>`;
+            log('❌ Failed to load QR image', 'error');
+        };
+        img.src = url;
+    }
+
+    // Auto-check on load
+    window.addEventListener('load', function() {
+        log('Page loaded', 'success');
+        log('Testing environment...', 'info');
+        checkLibrary();
+    });
+</script>
+
+</body>
+</html>

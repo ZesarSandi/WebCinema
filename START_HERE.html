@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎬 UKM CINEMA - Sistem Inventaris</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #1a237e 0%, #667eea 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container { 
+            max-width: 800px; 
+            width: 100%;
+        }
+        
+        header {
+            background: white;
+            border-radius: 16px;
+            padding: 50px 30px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #1a237e;
+            font-size: 48px;
+            margin-bottom: 10px;
+            animation: fadeIn 0.8s;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: #4ade80;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 35px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            animation: slideUp 0.8s;
+        }
+        
+        h2 {
+            color: #1a237e;
+            font-size: 24px;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #1a237e;
+            padding-bottom: 10px;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .feature-item {
+            background: #f5f7fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-left: 4px solid #1a237e;
+        }
+        
+        .feature-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .feature-title {
+            font-weight: 600;
+            color: #1a237e;
+            margin-bottom: 5px;
+        }
+        
+        .feature-desc {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .btn-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        button, .btn {
+            flex: 1;
+            padding: 18px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            min-width: 150px;
+        }
+        
+        .btn-primary {
+            background: #1a237e;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #667eea;
+            transform: scale(1.05);
+        }
+        
+        .btn-secondary {
+            background: #f5f7fa;
+            color: #1a237e;
+            border: 2px solid #1a237e;
+        }
+        
+        .btn-secondary:hover {
+            background: #1a237e;
+            color: white;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .info-box h3 {
+            color: #1565c0;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .info-box p {
+            color: #1976d2;
+            line-height: 1.6;
+        }
+        
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 36px; }
+            .subtitle { font-size: 16px; }
+            .features { grid-template-columns: 1fr; }
+            .btn-container { flex-direction: column; }
+            button, .btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎬 UKM CINEMA</h1>
+            <p class="subtitle">Sistem Inventaris Alat Peminjaman</p>
+            <div class="badge">✓ OFFLINE MODE - READY TO USE</div>
+        </header>
+
+        <div class="card">
+            <h2>📦 Aplikasi Frontend (Tanpa Backend)</h2>
+            
+            <div class="info-box">
+                <h3>💾 Mode Penyimpanan: localStorage</h3>
+                <p>
+                    Semua data tersimpan di browser Anda. Tidak perlu database atau server!<br>
+                    Data aman, private, dan tetap ada setelah refresh halaman.
+                </p>
+            </div>
+
+            <div class="features">
+                <div class="feature-item">
+                    <div class="feature-icon">📦</div>
+                    <div class="feature-title">Data Barang</div>
+                    <div class="feature-desc">CRUD, QR, Export</div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">📋</div>
+                    <div class="feature-title">Peminjaman</div>
+                    <div class="feature-desc">Form + Foto</div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">📜</div>
+                    <div class="feature-title">Riwayat</div>
+                    <div class="feature-desc">History + Search</div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">Laporan</div>
+                    <div class="feature-desc">Chart + Export</div>
+                </div>
+            </div>
+
+            <div class="btn-container">
+                <a href="Dashboard.html" class="btn btn-primary">
+                    🚀 Buka Aplikasi
+                </a>
+                <a href="README.md" target="_blank" class="btn btn-secondary">
+                    📖 Panduan Lengkap
+                </a>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>UKM CINEMA</strong> | Frontend-Only Mode | No Backend Required</p>
+            <p style="margin-top: 10px; font-size: 12px;">
+                Data Management • QR Generation • Camera Capture • Reports • Responsive Design
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Auto-redirect to Dashboard if user clicks anywhere
+        document.querySelector('.btn-primary').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = 'Dashboard.html';
+        });
+    </script>
+</body>
+</html>

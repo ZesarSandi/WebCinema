@@ -1,0 +1,28 @@
+# Node
+node_modules/
+**/node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+
+# Build output (if any)
+dist/
+build/
+
+# Cache
+.cache/
+
+# Optional: local-only backend folder
+backend/
+
+# Optional: temp QR build artifacts (keep if needed)
+# qr-wrapper.js

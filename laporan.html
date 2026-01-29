@@ -1,0 +1,92 @@
+A<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Laporan Bulanan | UKM CINEMA</title>
+  <link rel="stylesheet" href="css/style_dashboard.css">
+</head>
+<body>
+<div class="topbar">
+  <img src="img/Cinema.png" alt="CINEMA" class="logo">
+</div>
+<div class="container">
+  <aside class="sidebar">
+    <ul>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="data-barang.html">Data Barang</a></li>
+      <li><a href="peminjaman.html">Peminjaman</a></li>
+      <li><a href="riwayat.html">Riwayat</a></li>
+      <li class="active"><a href="laporan.html" aria-current="page">Laporan</a></li>
+    </ul>
+  </aside>
+
+  <main class="content laporan">
+    <div class="main-inner">
+      <h1>Laporan Bulanan</h1>
+      <p class="subtitle">Ringkasan peminjaman per bulan</p>
+
+      <div class="table-controls">
+        <div class="table-toolbar">
+          <label>Filter tahun
+            <select class="report-year" aria-label="Tahun laporan">
+              <!-- options populated by JS -->
+            </select>
+          </label>
+          <label style="margin-left:12px">Filter Alat
+            <select class="report-item" aria-label="Filter alat">
+              <option value="">Semua Alat</option>
+            </select>
+          </label>
+          <button class="btn btn-outline btn-export">Export CSV</button>
+          <button class="btn btn-outline btn-pdf" style="margin-left:10px">Export PDF</button>
+          <button class="btn btn-outline btn-seed" style="margin-left:12px">Isi data contoh</button>
+          <button class="btn btn-outline btn-selftest" style="margin-left:12px" id="btn-selftest-laporan">Jalankan Tes</button>
+        </div>
+      </div>
+
+      <div class="chart-wrap">
+        <canvas id="laporan-chart" width="800" height="240"></canvas>
+      </div>
+
+      <div class="table-wrap">
+        <caption class="sr-only">Laporan bulanan peminjaman</caption>
+        <table class="data-table table-laporan" aria-describedby="laporan-desc">
+          <thead>
+            <tr>
+              <th class="col-month">Bulan</th>
+              <th class="col-total">Total Pinjam</th>
+              <th class="col-returned">Dikembalikan</th>
+              <th class="col-active">Masih Dipinjam</th>
+              <th class="col-overdue">Terlambat</th>
+              <th class="col-aksi">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- rows injected by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal: Detail laporan bulan -->
+<div class="modal" id="modal-laporan-details" aria-hidden="true">
+  <div class="modal-overlay" data-close></div>
+  <div class="modal-panel" role="dialog" aria-modal="true">
+    <header class="modal-header"><h3 id="modal-laporan-title">Detail Bulan</h3><button class="modal-close" aria-label="Tutup">×</button></header>
+    <div class="modal-body" id="modal-laporan-body">
+      <!-- content injected by JS -->
+    </div>
+    <div class="modal-actions"><button class="btn btn-outline" data-close>Tutup</button><button class="btn btn-outline" id="laporan-export-month-pdf">Export PDF</button><button class="btn btn-primary" id="laporan-export-month">Export Bulan</button></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/google-integration.js"></script>
+</body>
+</html>

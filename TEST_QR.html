@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Generator Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f7fa;
+        }
+        .test-box {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1a237e;
+            margin-bottom: 20px;
+        }
+        button {
+            background: #1a237e;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #667eea;
+        }
+        #qr-output {
+            margin-top: 20px;
+            text-align: center;
+        }
+        #qr-output img {
+            max-width: 300px;
+            border: 2px solid #1a237e;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        .success {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .info {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-box">
+        <h1>🔲 QR Code Generator Test</h1>
+        
+        <div class="status info">
+            <strong>Status:</strong> <span id="status">Ready to test</span>
+        </div>
+        
+        <div>
+            <label>
+                <strong>Text to encode:</strong><br>
+                <input type="text" id="test-input" value="ITEM-1738058400" style="width:100%;padding:8px;margin-top:5px;border:1px solid #ddd;border-radius:4px">
+            </label>
+        </div>
+        
+        <div style="margin-top:15px">
+            <button onclick="testQRCodeJS()">Test with qrcode.js</button>
+            <button onclick="testGoogleCharts()">Test with Google Charts</button>
+            <button onclick="checkLibrary()">Check Library Status</button>
+        </div>
+        
+        <div id="qr-output"></div>
+    </div>
+
+    <!-- QRCode.js Library from npm (local bundle) -->
+    <script src="assets/js/qrcode-bundle.js"></script>
+    
+    <script>
+        const statusEl = document.getElementById('status');
+        const outputEl = document.getElementById('qr-output');
+        const inputEl = document.getElementById('test-input');
+
+        function updateStatus(msg, type = 'info') {
+            const div = document.querySelector('.status');
+            div.className = 'status ' + type;
+            statusEl.textContent = msg;
+        }
+
+        function checkLibrary() {
+            if(typeof QRCode !== 'undefined') {
+                updateStatus('✅ qrcode.js loaded successfully!', 'success');
+                console.log('QRCode object:', QRCode);
+                console.log('Available methods:', Object.keys(QRCode));
+            } else {
+                updateStatus('❌ qrcode.js NOT loaded', 'error');
+                console.error('QRCode library not found!');
+            }
+        }
+
+        function testQRCodeJS() {
+            const text = inputEl.value || 'TEST-' + Date.now();
+            updateStatus('Generating with qrcode.js...', 'info');
+            outputEl.innerHTML = '<p>⏳ Generating...</p>';
+
+            if(typeof QRCode === 'undefined') {
+                updateStatus('❌ qrcode.js not loaded!', 'error');
+                outputEl.innerHTML = '<p style="color:red">qrcode.js library not found!</p>';
+                return;
+            }
+
+            try {
+                QRCode.toDataURL(text, {
+                    width: 300,
+                    margin: 2,
+                    color: {
+                        dark: '#1a237e',
+                        light: '#ffffff'
+                    }
+                }, function(err, url) {
+                    if(err) {
+                        updateStatus('❌ Error: ' + err.message, 'error');
+                        outputEl.innerHTML = '<p style="color:red">Error: ' + err.message + '</p>';
+                        console.error('QRCode.js error:', err);
+                    } else {
+                        updateStatus('✅ QR generated successfully with qrcode.js!', 'success');
+                        outputEl.innerHTML = `
+                            <p><strong>Text:</strong> ${text}</p>
+                            <img src="${url}" alt="QR Code">
+                            <p style="font-size:12px;color:#666;margin-top:10px">Data URL length: ${url.length} chars</p>
+                        `;
+                        console.log('Success! Data URL:', url.substring(0, 100) + '...');
+                    }
+                });
+            } catch(e) {
+                updateStatus('❌ Exception: ' + e.message, 'error');
+                outputEl.innerHTML = '<p style="color:red">Exception: ' + e.message + '</p>';
+                console.error('Exception:', e);
+            }
+        }
+
+        function testGoogleCharts() {
+            const text = inputEl.value || 'TEST-' + Date.now();
+            updateStatus('Generating with Google Charts API...', 'info');
+            
+            const url = 'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' + encodeURIComponent(text);
+            
+            outputEl.innerHTML = `
+                <p><strong>Text:</strong> ${text}</p>
+                <img src="${url}" alt="QR Code" onload="onGoogleSuccess()" onerror="onGoogleError()">
+            `;
+        }
+
+        function onGoogleSuccess() {
+            updateStatus('✅ QR generated successfully with Google Charts!', 'success');
+        }
+
+        function onGoogleError() {
+            updateStatus('❌ Failed to load from Google Charts', 'error');
+        }
+
+        // Auto-check on load
+        window.addEventListener('load', function() {
+            setTimeout(checkLibrary, 500);
+        });
+    </script>
+</body>
+</html>
